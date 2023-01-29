@@ -1,15 +1,12 @@
 const router = require("express").Router();
 const users = require("../controllers/users");
+const middleware = require("../configs/middleware");
 
-// middleware that is specific to this router
-router.use((req, res, next) => {
-  console.log("Time: ", Date.now());
-  next();
-});
+router.post("/login", users.LOGIN_USER);
 
-router.get("/all", users.READS_USERS);
-router.post("/create", users.CREATES_USERS);
-router.post("/update/:id", users.UPDATE_USERS);
-router.delete("/delete/:id", users.DELETE_USERS);
+router.get("/all", middleware.isAuth, users.READS_USERS);
+router.post("/create", middleware.isAuth, users.CREATES_USERS);
+router.post("/update/:id", middleware.isAuth, users.UPDATE_USERS);
+router.delete("/delete/:id", middleware.isAuth, users.DELETE_USERS);
 
 module.exports = router;
